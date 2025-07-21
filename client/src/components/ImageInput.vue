@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitForm" class="w-full max-w-3xl mx-auto space-y-4">
-    <div class="relative">
+    <div class="relative ">
       <input
         ref="inputFile"
         type="file"
@@ -13,12 +13,12 @@
         <img
           :src="selectedImage"
           alt="Image you have picked for editing"
-          class="w-full h-64 object-contain rounded-xl bg-gray-50"
+          class="w-full h-64 object-contain rounded-xl bg-gray-50 dark:bg-gray-700"
         />
-        <div class="w-full sm:my-3  flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="w-full my-1.5 sm:my-3  flex flex-col sm:flex-row items-center justify-center gap-4">
         <MyButton buttonText="Delete Image" @click="removeImage" />
-        <DropDown selectName="Select Filter" />
-        <MyButton buttonText="Apply Filter" @click="applyFilter" />
+        <DropDown v-model="filter"/>
+        <MyButton type="submit" buttonText="Apply Filter" @click="applyFilter" />
         </div>
       </div>
 
@@ -49,6 +49,7 @@ import MyButton from '@/components/MyButton.vue';
 import DropDown from './DropDown.vue';
 
 const selectedImage = ref(null)
+const filter = ref(null);
 
 function handleFileSelect(event) {
     const file = event.target.files[0]
@@ -64,5 +65,9 @@ function handleFileSelect(event) {
 
 function removeImage(event) {
   selectedImage.value = null
+}
+
+const applyFilter = async () => {
+  console.log(filter.value);
 }
 </script>
