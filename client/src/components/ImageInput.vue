@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="submitForm" class="w-full max-w-3xl mx-auto space-y-4">
-    <div class="relative ">
+  <form @submit.prevent="submitForm" ref="uploadForm" class="w-full max-w-3xl mx-auto space-y-4">
+    <div class="relative">
       <input
         ref="inputFile"
         type="file"
@@ -9,16 +9,19 @@
         class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
       />
 
-      <div v-if="selectedImage" class="relative ">
+      <div v-if="selectedImage" class="relative">
         <img
           :src="selectedImage"
           alt="Image you have picked for editing"
           class="w-full h-64 object-contain rounded-xl bg-gray-50 dark:bg-gray-700"
         />
-        <div class="w-full my-1.5 sm:my-3  flex flex-col sm:flex-row items-center justify-center gap-4">
-        <MyButton buttonText="Delete Image" @click="removeImage" />
-        <DropDown v-model="filter"/>
-        <MyButton type="submit" buttonText="Apply Filter" @click="applyFilter" />
+        <div
+          class="w-full my-1.5 sm:my-3 flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <MyButton button-text="Delete Image" @click="removeImage" />
+          <DropDown v-model="filter" />
+          <MyButton v-if="filter" type="submit" button-text="Apply Filter" @click="applyFilter" />
+          <MyButton v-else type="submit" button-text="Apply Filter" :is-disabled="true" />
         </div>
       </div>
 
@@ -26,18 +29,7 @@
         v-else
         class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-indigo-400 hover:bg-gray-50 transition-all cursor-pointer"
       >
-        <div class="text-gray-500">
-          <svg class="mx-auto w-12 h-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
-          <p class="text-lg">Click to upload image</p>
-          <p class="text-sm text-gray-400 mt-1">JPG, PNG or GIF</p>
-        </div>
+      <UploadArea />
       </div>
     </div>
   </form>
@@ -45,11 +37,16 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
+import axios from 'axios';
+
 import MyButton from '@/components/MyButton.vue';
 import DropDown from './DropDown.vue';
+import UploadArea from './UploadArea.vue';
 
-const selectedImage = ref(null)
+const selectedImage = ref(null) // Will be a blobURL
 const filter = ref(null);
+const submitButton = ref(null)
+const uploadForm = ref(null);
 
 function handleFileSelect(event) {
     const file = event.target.files[0]
@@ -58,16 +55,48 @@ function handleFileSelect(event) {
     }
     if (file.type.startsWith('image/')) {
         selectedImage.value = URL.createObjectURL(event.target.files[0])
+
     } else {
         alert("File is not an Image");
     }
 }
 
+async function blobURLToFile(blobURL, filename) {
+  try {
+    const response = await fetch(blobURL);
+    const blob = await response.blob();
+    const file = new File([blob], filename, {type: blob.type });
+    return file
+  } catch (error) {
+    console.log("Error Fetching BlobURL", error);
+  }
+}
+
 function removeImage(event) {
   selectedImage.value = null
+  uploadForm.value.reset();
 }
 
 const applyFilter = async () => {
-  console.log(filter.value);
+  if(!selectedImage.value || !filter.value) {
+    alert("Error: No image or filter selected. Please upload an image and select a filter before submitting");
+  }
+  const formData = new FormData();
+  formData.append('image', await blobURLToFile(selectedImage.value, "img"));
+  formData.append('option', filter.value);
+
+  try {
+    const response = await axios.post('http://localhost:3000/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    if(response.status > 299 || response.status < 200) {
+      console.log("POST failed with status: ", response.status);
+    }
+
+  } catch (error) {
+    console.log("Error uploading Image: ", error);
+  }
 }
 </script>
