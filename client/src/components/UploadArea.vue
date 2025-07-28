@@ -9,6 +9,6 @@
       />
     </svg>
     <p class="text-lg">Click to upload image</p>
-    <p class="text-sm text-gray-400 mt-1">JPG, PNG or GIF</p>
+    <p class="text-sm text-gray-400 mt-1">JPG or PNG</p>
   </div>
 </template>

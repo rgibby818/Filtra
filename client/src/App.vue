@@ -1,11 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HomeView  from './views/HomeView.vue';
+import ImageUpload from './views/ImageUpload.vue'
+import Navbar from './components/Navbar.vue';
 </script>
 
 <template>
-  <HomeView />
+  <Navbar />
+  <ImageUpload />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
