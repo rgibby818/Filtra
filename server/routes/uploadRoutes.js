@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 import applyImageFilter from "../helper/filter.js"
-
+import fs from 'fs'
 
 const router = express.Router()
 const storage = multer.diskStorage({
@@ -15,6 +15,11 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer( {storage} );
+const supportedFiles = [
+    'image/jpg',
+    'image/jpeg',
+    'image/png'
+]
 
 
 router.post('/', upload.single('image'), async (req, res) => {
@@ -23,21 +28,33 @@ router.post('/', upload.single('image'), async (req, res) => {
     const filter = req.body.option;
     const option = req.body.option;
 
-    if(!file.mimetype.split("/")[0] === 'image') {
+    if(file.mimetype.split("/")[0] !== 'image') {
         return res.status(415).json({ message: "File is not an Image"});
     }
     if (!file) {
-      return res.status(400).json({ message: 'No image was uploaded' })
+      return res.status(400).json({ message: 'No image was uploaded' });
+    }
+    if(!supportedFiles.includes(file.mimetype.toLowerCase())) {
+        return res.status(415).json({ message: "File is valid format" });
     }
 
     const filterImage = await applyImageFilter(file.path, filter);
+    const mimetype = file.mimetype
+    console.log(mimetype);
 
-    res.sendFile(filterImage.filePath, (error) => {
-        if (error) {
-            console.log("Error Processing Image");
-            res.status(500).send("Error sending image.");
+    fs.readFile(filterImage.filePath, (error, data) => {
+        if(error) {
+            return res.status(500).json({ message: "Unable to read image file" });
         }
+        const base64Image = Buffer.from(data).toString('base64');
+
+        res.json({
+            image: base64Image,
+            name: filterImage.fileName,
+            mimetype: file.mimetype
+        })
     })
+
 })
 
 export default router

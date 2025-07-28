@@ -1,47 +1,31 @@
 <template>
-  <form @submit.prevent="submitForm" ref="uploadForm" class="w-full max-w-3xl mx-auto space-y-4">
+  <form
+    @submit.prevent="submitForm"
+    ref="uploadForm"
+    class="w-full max-w-3xl mx-auto my-7 sm:my-10 space-y-4"
+  >
     <div class="relative">
       <FileInput @change="handleFileSelect" />
-
-      <div v-if="selectedImage" class="relative">
-        <img
-          :src="selectedImage"
-          alt="Image you have picked for editing"
-          class="w-full h-64 object-contain rounded-xl bg-gray-50 dark:bg-slate-900"
-        />
-        <div
-          class="w-full my-1.5 sm:my-3 flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <MyButton button-text="Delete Image" @click="removeImage" />
-          <DropDown v-model="filter" />
-          <MyButton v-if="filter" type="submit" button-text="Apply Filter" @click="applyFilter" />
-          <MyButton v-else type="submit" button-text="Apply Filter" :is-disabled="true" />
-        </div>
-      </div>
-
-      <div
-        v-else
-        class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-indigo-400 hover:bg-gray-50 transition-all cursor-pointer"
-      >
-        <UploadArea />
-      </div>
+      <ImagePreview :image-url="selectedImage" :upload-area="true">
+        <MyButton button-text="Delete Image" @click="removeImage" />
+        <DropDown v-model="filter" />
+        <MyButton v-if="filter" type="submit" button-text="Apply Filter" @click="applyFilter" />
+        <MyButton v-else type="submit" button-text="Apply Filter" :is-disabled="true" />
+      </ImagePreview>
     </div>
   </form>
-  <div 
-  v-if="filteredImageURL"
-  class="w-full max-w-3xl mx-auto space-y-4">
-    <img 
-    :src="filteredImageURL" 
-    alt="Filtered Image"
-    class="w-full h-64 object-contain rounded-xl bg-gray-50 dark:bg-slate-900" />
+  <div v-if="filteredImage.url" class="w-full max-w-3xl mx-auto space-y-4">
+    <ImagePreview v-if="filteredImage.url" :imageUrl="filteredImage.url" alt-text="Filtered Image">
+      <MyButton button-text="Download" @click="downloadImage" />
+    </ImagePreview>
   </div>
 </template>
 
 <script setup>
 import MyButton from '@/components/MyButton.vue'
 import DropDown from './DropDown.vue'
-import UploadArea from './UploadArea.vue'
 import FileInput from './FileInput.vue'
+import ImagePreview from './ImagePreview.vue'
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 
@@ -49,7 +33,10 @@ const selectedImage = ref(null) // Will be a blobURL
 const filter = ref(null)
 const submitButton = ref(null)
 const uploadForm = ref(null)
-const filteredImageURL = ref(null);
+const filteredImage = reactive({
+  url: '',
+  name: '',
+})
 
 function handleFileSelect(func) {
   if (func.error) {
@@ -89,14 +76,19 @@ const applyFilter = async () => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      responseType: 'blob',
     })
-
-    const imageBlob = response.data
-    const imageURL = URL.createObjectURL(imageBlob);
-    filteredImageURL.value = imageURL;
+    const base64 = response.data.image
+    filteredImage.url = `data:${response.data.mimetype};base64,${base64}`
+    filteredImage.name = response.data.name
   } catch (error) {
     console.log('Error uploading Image:', error.message)
   }
+}
+
+const downloadImage = () => {
+  const link = document.createElement('a')
+  link.href = filteredImage.url
+  link.download = filteredImage.name
+  link.click()
 }
 </script>

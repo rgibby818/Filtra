@@ -3,6 +3,7 @@ import ImageInput from '@/components/ImageInput.vue'
 </script>
 
 <template>
-  <ImageInput class="mt-3 px-2 sm:px-0"></ImageInput>
-
+  <div class="mt-3 px-4 lg:px-0">
+    <ImageInput></ImageInput>
+  </div>
 </template>

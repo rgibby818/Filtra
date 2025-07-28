@@ -1,21 +1,20 @@
 <script setup>
-
 const props = defineProps({
   modelValue: String,
   placeholder: {
     type: String,
-    default: 'Select A Filter'
-  }
-});
+    default: 'Select A Filter',
+  },
+})
 
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue'])
 
 const options = {
-    blackwhite: 'Black and White',
-    sepia: 'Sepia',
-    invert: 'Invert',
-    normalize: "Normalize",
-    removebg: 'Remove Background'
+  blackwhite: 'Black and White',
+  sepia: 'Sepia',
+  invert: 'Invert',
+  normalize: 'Normalize',
+  removebg: 'Remove Background',
 }
 </script>
 
