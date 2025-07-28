@@ -1,7 +1,9 @@
 import sharp from 'sharp'
 import path from 'path'
 import fs from 'fs/promises'
+import removeBackground from './removebg.js'
 import { fileURLToPath } from 'url'
+
 
 function validateOptions(option) {
   const validOption = ['blackwhite', 'sepia', 'invert', 'normalize', 'removebg']
@@ -72,8 +74,11 @@ export default async function applyImageFilter(filePath, filterOption) {
       break
 
     case 'removebg':
-      // TODO: Fetch image via api
-      break
+      const imageBufferArray = await removeBackground(filePath, filterPathObj.fileName);
+      const imageBuffer = Buffer.from(imageBufferArray);
+      await fs.writeFile(filterPathObj.filePath, imageBuffer);
+      return filterPathObj;
+
   }
 
   await img.toFile(filterPathObj.filePath);

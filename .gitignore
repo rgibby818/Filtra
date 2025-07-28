@@ -32,3 +32,4 @@ coverage
 
 uploads/*
 uploads-filtered/*
+.env

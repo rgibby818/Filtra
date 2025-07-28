@@ -16,7 +16,7 @@
   </form>
   <div v-if="filteredImage.url" class="w-full max-w-3xl mx-auto space-y-4">
     <ImagePreview v-if="filteredImage.url" :imageUrl="filteredImage.url" alt-text="Filtered Image">
-      <MyButton button-text="Download" @click="downloadImage" />
+      <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full"/>
     </ImagePreview>
   </div>
 </template>
@@ -58,6 +58,10 @@ async function blobURLToFile(blobURL, filename) {
 
 function removeImage(event) {
   selectedImage.value = null
+  if(filteredImage) {
+    filteredImage.url = '';
+    filteredImage.name = '';
+  }
   uploadForm.value.reset()
 }
 

@@ -6,7 +6,7 @@
       class="w-full h-64 object-contain rounded-xl bg-gray-50 dark:bg-slate-900"
     />
     <div class="w-full my-1.5 sm:my-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-      <slot></slot>
+      <slot ></slot>
     </div>
   </div>
 

@@ -13,11 +13,13 @@ const props = defineProps({
 <template>
   <div class="flex items-center gap-4 bg-gray-100 dark:bg-gray-700">
     <Logo class="w-10 h-10 hover:scale-105" />
-    <a class="hover:cursor-pointer hover:scale-105">
+    <a class="hover:cursor-pointer hover:scale-105" href="/">
       <h3 class="text-2xl text-indigo-500 font-bold">FILTRA</h3>
     </a>
     <div class="flex w-full items-center justify-end">
+      <a href="#">
       <h3 class="mr-4 text-1xl text-indigo-500 font-bold flex-end hover:scale-110 cursor-pointer">About</h3>
+      </a>
     </div>
   </div>
 </template>
