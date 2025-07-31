@@ -16,7 +16,7 @@
   </form>
   <div v-if="filteredImage.url" class="w-full max-w-3xl mx-auto space-y-4">
     <ImagePreview v-if="filteredImage.url" :imageUrl="filteredImage.url" alt-text="Filtered Image">
-      <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full"/>
+      <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full" />
     </ImagePreview>
   </div>
 </template>
@@ -29,38 +29,33 @@ import ImagePreview from './ImagePreview.vue'
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 
+
 const selectedImage = ref(null) // Will be a blobURL
 const filter = ref(null)
 const submitButton = ref(null)
 const uploadForm = ref(null)
 const filteredImage = reactive({
-  url: '',
-  name: '',
+  url: null,
+  name: null,
 })
 
-function handleFileSelect(func) {
+
+const handleFileSelect = async (func) => {
   if (func.error) {
     alert(func.error)
+    selectedImage.value = null
+    return
   }
-  selectedImage.value = func.url
+  selectedImage.value = func.url;
+  return
 }
 
-async function blobURLToFile(blobURL, filename) {
-  try {
-    const response = await fetch(blobURL)
-    const blob = await response.blob()
-    const file = new File([blob], filename, { type: blob.type })
-    return file
-  } catch (error) {
-    console.log('Error Fetching BlobURL', error)
-  }
-}
-
-function removeImage(event) {
+const removeImage = (event) => {
+  localStorage.clear()
   selectedImage.value = null
-  if(filteredImage) {
-    filteredImage.url = '';
-    filteredImage.name = '';
+  if (filteredImage) {
+    filteredImage.url = ''
+    filteredImage.name = ''
   }
   uploadForm.value.reset()
 }
@@ -71,8 +66,15 @@ const applyFilter = async () => {
       'Error: No image or filter selected. Please upload an image and select a filter before submitting',
     )
   }
+
   const formData = new FormData()
-  formData.append('image', await blobURLToFile(selectedImage.value, 'img.png'))
+  const file = await blobURLToFile(selectedImage.value, 'img.png');
+  if (!file) {
+    alert('Invalid image. Please re-upload')
+    return
+  }
+
+  formData.append('image', file)
   formData.append('option', filter.value)
 
   try {
@@ -94,5 +96,21 @@ const downloadImage = () => {
   link.href = filteredImage.url
   link.download = filteredImage.name
   link.click()
+}
+
+const blobURLToFile = async (blobURL, filename='img.png') => {
+  if (!blobURL.startsWith('blob:')) {
+    console.warn('Not a valid blobURL:', blobURL)
+    return null
+  }
+  try {
+    const response = await fetch(blobURL)
+    const blob = await response.blob()
+    const file = new File([blob], filename, { type: blob.type })
+    return file
+  } catch (error) {
+    console.warn('Error Fetching BlobURL', error)
+    return null
+  }
 }
 </script>

@@ -17,10 +17,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 async function createFilePaths(originalFilePath, filterOption) {
   try {
-    // Full absolute path to the uploaded image
-    const sourceImagePath = path.resolve(__dirname, originalFilePath);
 
-    // Destination directory (e.g., /path/to/server/filtered-images)
+    const sourceImagePath = path.resolve(__dirname, originalFilePath);
     const destinationPathDir = path.resolve(__dirname, '../../uploads-filtered');
 
     // Create the filtered-images directory if it doesn't exist
@@ -34,7 +32,6 @@ async function createFilePaths(originalFilePath, filterOption) {
     const filteredImageFileName = `${fileNameOnly}-${filterOption}${fileExtension}`;
     const filteredImageFilePath = path.join(destinationPathDir, filteredImageFileName);
 
-    // Return both file name and path
     return {
       fileName: filteredImageFileName,
       filePath: filteredImageFilePath

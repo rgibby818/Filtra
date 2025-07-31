@@ -6,7 +6,7 @@ import Navbar from './components/Navbar.vue'
 
 <template>
   <Navbar />
-  <ImageUpload />
+  <RouterView></RouterView>
 </template>
 
 <style scoped></style>

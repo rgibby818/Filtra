@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-import { defineEmits } from 'vue'
 const emit = defineEmits(['change'])
 
 function onFileChange(event) {
@@ -20,6 +19,7 @@ function onFileChange(event) {
   }
   if (!file.type.startsWith('image/')) {
     emit('change', { error: 'File is not an Image' })
+    return
   }
   const imageURL = URL.createObjectURL(file)
   emit('change', { file, url: imageURL })
