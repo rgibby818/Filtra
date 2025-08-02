@@ -1,5 +1,9 @@
 import fs from 'fs/promises';
-import path from 'path';
+import path, { basename } from 'path';
+
+function getMimeType(basename) {
+    return `image/${basename.split('.')[1]}`;
+}
 
 export default async function getImages(directoryPath, start, end) {
     start = parseInt(start);
@@ -17,9 +21,11 @@ export default async function getImages(directoryPath, start, end) {
             filesInRange.map(async (fileName) => {
                 const filePath = path.join(directoryPath, fileName);
                 const fileData = (await fs.readFile(filePath)).toString('base64');
+                const mimetype = getMimeType(fileName)
                 return {
                     fileName,
-                    blob: fileData, // Buffer
+                    blob: fileData, 
+                    mimetype,
                 };
             })
         );

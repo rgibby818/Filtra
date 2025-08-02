@@ -31,6 +31,7 @@ import axios from 'axios'
 
 
 const selectedImage = ref(null) // Will be a blobURL
+const selectedImageName = ref(null)
 const filter = ref(null)
 const submitButton = ref(null)
 const uploadForm = ref(null)
@@ -40,13 +41,15 @@ const filteredImage = reactive({
 })
 
 
-const handleFileSelect = async (func) => {
-  if (func.error) {
-    alert(func.error)
+async function handleFileSelect(emit) {
+  if (emit.error) {
+    alert(emit.error)
     selectedImage.value = null
+    selectedImageName = null
     return
   }
-  selectedImage.value = func.url;
+  selectedImage.value = emit.url
+  selectedImageName.value = emit.file.name
   return
 }
 
@@ -68,7 +71,7 @@ const applyFilter = async () => {
   }
 
   const formData = new FormData()
-  const file = await blobURLToFile(selectedImage.value, 'img.png');
+  const file = await blobURLToFile(selectedImage.value, selectedImageName.value);
   if (!file) {
     alert('Invalid image. Please re-upload')
     return
@@ -98,7 +101,7 @@ const downloadImage = () => {
   link.click()
 }
 
-const blobURLToFile = async (blobURL, filename='img.png') => {
+const blobURLToFile = async (blobURL, filename) => {
   if (!blobURL.startsWith('blob:')) {
     console.warn('Not a valid blobURL:', blobURL)
     return null

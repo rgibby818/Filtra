@@ -37,7 +37,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 
   const filterImage = await applyImageFilter(file.path, filter)
   const mimetype = file.mimetype
-  console.log(mimetype)
 
   fs.readFile(filterImage.filePath, (error, data) => {
     if (error) {

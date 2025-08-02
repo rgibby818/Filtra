@@ -9,7 +9,6 @@ const originalImagesPath = path.resolve('uploads/');
 const filteredImagesPath = path.resolve('uploads-filtered/');
 
 router.post('/', async (req, res) => {
-
     const { start, end } = req.headers;
 
     if (!start || !end) {
@@ -25,7 +24,7 @@ router.post('/', async (req, res) => {
             originals: originalImages.images,
             filtered: filteredImages.images,
             hasMore: filteredImages.hasMore
-        })
+        });
 
     } catch (error) {
         console.log(error);
