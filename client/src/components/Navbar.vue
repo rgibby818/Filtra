@@ -17,8 +17,8 @@ const props = defineProps({
       <h3 class="text-2xl text-indigo-500 font-bold">FILTRA</h3>
     </RouterLink>
     <div class="flex w-full items-center justify-end">
-      <RouterLink class="hover:cursor-pointer hover:scale-105" to="/about">
-        <h3 class="mr-4 text-1xl text-indigo-500 font-bold flex-end">About</h3>
+      <RouterLink class="hover:cursor-pointer hover:scale-105" to="/history">
+        <h3 class="mr-4 text-1xl text-indigo-500 font-bold flex-end">History</h3>
       </RouterLink>
     </div>
   </nav>
