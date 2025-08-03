@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ImageUpload from '../views/ImageUpload.vue'
 import History from '../views/History.vue'
 
-
 const routes = [
   {
     path: '/',

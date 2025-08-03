@@ -3,13 +3,20 @@
     @submit.prevent="submitForm"
     ref="uploadForm"
     class="w-full max-w-3xl mx-auto my-7 sm:my-10 space-y-4"
+    id="image-form"
   >
     <div class="relative">
       <FileInput @change="handleFileSelect" />
       <ImagePreview :image-url="selectedImage" :upload-area="true">
         <MyButton button-text="Delete Image" @click="removeImage" />
         <DropDown v-model="filter" />
-        <MyButton v-if="filter" type="submit" button-text="Apply Filter" @click="applyFilter" />
+        <MyButton
+          v-if="filter"
+          type="submit"
+          button-text="Apply Filter"
+          @click="applyFilter"
+          :is-disabled="isDisabled"
+        />
         <MyButton v-else type="submit" button-text="Apply Filter" :is-disabled="true" />
       </ImagePreview>
     </div>
@@ -17,7 +24,11 @@
   <div v-if="loading" class="flex w-full max-w-3xl mx-auto space-y-4 items-center justify-center">
     <Loading />
   </div>
-  <div v-else-if="filteredImage.url" :class="isLoaded ? 'opacity-100' : 'opacity-0'" class="w-full max-w-3xl mx-auto space-y-4 ease-in-out transition-opacity duration-500">
+  <div
+    v-else-if="filteredImage.url"
+    :class="isLoaded ? 'opacity-100' : 'opacity-0'"
+    class="w-full max-w-3xl mx-auto space-y-4 ease-in-out transition-opacity duration-500"
+  >
     <ImagePreview v-if="filteredImage.url" :imageUrl="filteredImage.url" alt-text="Filtered Image">
       <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full" />
     </ImagePreview>
@@ -33,9 +44,9 @@ import ImagePreview from './ImagePreview.vue'
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 
-
-const loading = ref(false);
-const isLoaded = ref(false);
+const loading = ref(false)
+const isLoaded = ref(false)
+const isDisabled = ref(false)
 const selectedImage = ref(null) // Will be a blobURL
 const selectedImageName = ref(null)
 const filter = ref(null)
@@ -45,7 +56,6 @@ const filteredImage = reactive({
   url: null,
   name: null,
 })
-
 
 async function handleFileSelect(emit) {
   if (emit.error) {
@@ -70,15 +80,16 @@ const removeImage = (event) => {
 }
 
 const applyFilter = async () => {
+  isDisabled.value = true
   if (!selectedImage.value || !filter.value) {
     alert(
       'Error: No image or filter selected. Please upload an image and select a filter before submitting',
     )
   }
-  loading.value = true;
-  isLoaded.value = false;
+  loading.value = true
+  isLoaded.value = false
   const formData = new FormData()
-  const file = await blobURLToFile(selectedImage.value, selectedImageName.value);
+  const file = await blobURLToFile(selectedImage.value, selectedImageName.value)
   if (!file) {
     alert('Invalid image. Please re-upload')
     return
@@ -101,8 +112,9 @@ const applyFilter = async () => {
   } finally {
     loading.value = false
     setTimeout(() => {
-      isLoaded.value = true;
-    }, 100);
+      isLoaded.value = true
+      isDisabled.value = false
+    }, 100)
   }
 }
 

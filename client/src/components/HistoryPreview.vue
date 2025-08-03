@@ -2,7 +2,10 @@
   <div v-if="loading" class="flex flex-col items-center justify-center h-dvh w-dvw">
     <Loading />
   </div>
-  <div v-else-if="errorMessage" class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-4" >
+  <div
+    v-else-if="errorMessage"
+    class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-4"
+  >
     <h1 class="text-lg sm:text-2xl w-1/2">{{ errorMessage }}</h1>
     <DogImage />
   </div>
@@ -12,9 +15,13 @@
       :key="index"
       class="grid grid-cols-1 lg:grid-cols-2 gap-1 w-4/6"
     >
-      <time class="lg:col-span-2 text-center dark:text-white">{{
+      <time class="text-center dark:text-white">{{
         convertEpochTime(item.fileName.split('-')[0])
       }}</time>
+      <h3 class="text-center">
+        Filter Type:
+        {{ images.filtered[index].fileName.split('-').at(-1).split('.')[0].toUpperCase() }}
+      </h3>
       <ImagePreview
         class="lg:mr-2"
         :image-url="`data:${item.mimetype};base64,${item.blob}`"
@@ -26,12 +33,15 @@
       />
     </div>
   </div>
-  <div v-else class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-1">
-    <h1 class=" text-lg sm:text-2xl w-auto m-2 text-center">No images to show</h1>
+  <div
+    v-else
+    class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-1"
+  >
+    <h1 class="text-lg sm:text-2xl w-auto m-2 text-center">No images to show</h1>
     <DogImage />
   </div>
   <div v-if="hasMore" class="flex justify-center mb-5">
-    <MyButton button-text="Load More" @click="getImages(start,end)" />
+    <MyButton button-text="Load More" @click="getImages(start, end)" />
   </div>
 </template>
 
@@ -39,7 +49,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import ImagePreview from './ImagePreview.vue'
-import DogImage from './DogImage.vue' 
+import DogImage from './DogImage.vue'
 import Loading from './Loading.vue'
 import MyButton from './MyButton.vue'
 
@@ -59,8 +69,8 @@ async function getImages(startIndex, endIndex) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'start': startIndex,
-        'end': endIndex,
+        start: startIndex,
+        end: endIndex,
       },
     })
     if (!response.ok) {
@@ -69,14 +79,15 @@ async function getImages(startIndex, endIndex) {
       return
     }
     const data = await response.json()
-    if(Object.keys(images.value).length === 0) {
+    if (Object.keys(images.value).length === 0) {
       images.value = data
-      hasMore.value = data.hasMore;
+      hasMore.value = data.hasMore
     } else {
-      images.value.originals.push(...data.originals);
-      images.value.filtered.push(...data.filtered);
+      images.value.originals.push(...data.originals)
+      images.value.filtered.push(...data.filtered)
       hasMore.value = data.hasMore
     }
+    console.log(images.value)
   } catch (error) {
     errorMessage.value = 'Network error'
     console.log('Fetch error:', error)
@@ -86,7 +97,6 @@ async function getImages(startIndex, endIndex) {
       start.value = end.value
       end.value = end.value + 10
     }
-    console.log(images.value);
   }
 }
 
