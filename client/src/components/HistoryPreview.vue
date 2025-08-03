@@ -1,22 +1,18 @@
 <template>
   <div v-if="loading" class="flex flex-col items-center justify-center h-dvh w-dvw">
-    <div class="relative w-40 h-40 flex items-center justify-center">
-      <div
-        class="w-full h-full rounded-full absolute border-8 border-transparent border-t-slate-500 border-r-pink-500 border-b-blue-500 border-l-purple-500 animate-spin"
-      ></div>
-    </div>
+    <Loading />
   </div>
-  <div class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-4" v-else-if="errorMessage">
+  <div v-else-if="errorMessage" class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-4" >
     <h1 class="text-lg sm:text-2xl w-1/2">{{ errorMessage }}</h1>
-    <ErrorImage />
+    <DogImage />
   </div>
-  <div v-else="images" class="flex flex-col items-center mt-3">
+  <div v-else-if="Object.keys(images.filtered).length > 0" class="flex flex-col items-center mt-3">
     <div
       v-for="(item, index) in images.originals"
       :key="index"
       class="grid grid-cols-1 lg:grid-cols-2 gap-1 w-4/6"
     >
-      <time class="lg:col-span-2 text-center">{{
+      <time class="lg:col-span-2 text-center dark:text-white">{{
         convertEpochTime(item.fileName.split('-')[0])
       }}</time>
       <ImagePreview
@@ -30,13 +26,22 @@
       />
     </div>
   </div>
+  <div v-else class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-1">
+    <h1 class=" text-lg sm:text-2xl w-auto m-2 text-center">No images to show</h1>
+    <DogImage />
+  </div>
+  <div v-if="hasMore" class="flex justify-center mb-5">
+    <MyButton button-text="Load More" @click="getImages(start,end)" />
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import ImagePreview from './ImagePreview.vue'
-import ErrorImage from './ErrorImage.vue'
+import DogImage from './DogImage.vue' 
+import Loading from './Loading.vue'
+import MyButton from './MyButton.vue'
 
 const start = ref(0)
 const end = ref(10)
@@ -48,14 +53,14 @@ const hasMore = ref(null)
 const loading = ref(true)
 const errorMessage = ref(null)
 
-async function getImages(start, end) {
+async function getImages(startIndex, endIndex) {
   try {
     const response = await fetch('http://localhost:3000/history', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        start: start,
-        end: end,
+        'start': startIndex,
+        'end': endIndex,
       },
     })
     if (!response.ok) {
@@ -64,20 +69,29 @@ async function getImages(start, end) {
       return
     }
     const data = await response.json()
-    console.log(data)
-
-    images.value = data
+    if(Object.keys(images.value).length === 0) {
+      images.value = data
+      hasMore.value = data.hasMore;
+    } else {
+      images.value.originals.push(...data.originals);
+      images.value.filtered.push(...data.filtered);
+      hasMore.value = data.hasMore
+    }
   } catch (error) {
     errorMessage.value = 'Network error'
     console.log('Fetch error:', error)
   } finally {
     loading.value = false
+    if (hasMore.value) {
+      start.value = end.value
+      end.value = end.value + 10
+    }
+    console.log(images.value);
   }
 }
 
 function convertEpochTime(epoch) {
   let date = new Date(parseInt(epoch))
-  console.log(date.toLocaleDateString())
   return date.toLocaleString()
 }
 

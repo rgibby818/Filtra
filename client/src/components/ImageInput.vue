@@ -14,7 +14,10 @@
       </ImagePreview>
     </div>
   </form>
-  <div v-if="filteredImage.url" class="w-full max-w-3xl mx-auto space-y-4">
+  <div v-if="loading" class="flex w-full max-w-3xl mx-auto space-y-4 items-center justify-center">
+    <Loading />
+  </div>
+  <div v-else-if="filteredImage.url" :class="isLoaded ? 'opacity-100' : 'opacity-0'" class="w-full max-w-3xl mx-auto space-y-4 ease-in-out transition-opacity duration-500">
     <ImagePreview v-if="filteredImage.url" :imageUrl="filteredImage.url" alt-text="Filtered Image">
       <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full" />
     </ImagePreview>
@@ -22,14 +25,17 @@
 </template>
 
 <script setup>
-import MyButton from '@/components/MyButton.vue'
+import MyButton from './MyButton.vue'
 import DropDown from './DropDown.vue'
 import FileInput from './FileInput.vue'
+import Loading from './Loading.vue'
 import ImagePreview from './ImagePreview.vue'
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 
 
+const loading = ref(false);
+const isLoaded = ref(false);
 const selectedImage = ref(null) // Will be a blobURL
 const selectedImageName = ref(null)
 const filter = ref(null)
@@ -69,7 +75,8 @@ const applyFilter = async () => {
       'Error: No image or filter selected. Please upload an image and select a filter before submitting',
     )
   }
-
+  loading.value = true;
+  isLoaded.value = false;
   const formData = new FormData()
   const file = await blobURLToFile(selectedImage.value, selectedImageName.value);
   if (!file) {
@@ -91,6 +98,11 @@ const applyFilter = async () => {
     filteredImage.name = response.data.name
   } catch (error) {
     console.log('Error uploading Image:', error.message)
+  } finally {
+    loading.value = false
+    setTimeout(() => {
+      isLoaded.value = true;
+    }, 100);
   }
 }
 
