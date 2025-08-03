@@ -3,7 +3,7 @@
     @submit.prevent="submitForm"
     ref="uploadForm"
     class="w-full max-w-3xl mx-auto my-7 sm:my-10 space-y-4"
-    id="image-form"
+    :id="uploadForm"
   >
     <div class="relative">
       <FileInput @change="handleFileSelect" />
@@ -33,6 +33,7 @@
       <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full" />
     </ImagePreview>
   </div>
+  <div v-if="errorMessage" class="flex dark:text-white text-xl font-semibold justify-center">{{ errorMessage }}</div>
 </template>
 
 <script setup>
@@ -50,18 +51,18 @@ const isDisabled = ref(false)
 const selectedImage = ref(null) // Will be a blobURL
 const selectedImageName = ref(null)
 const filter = ref(null)
-const submitButton = ref(null)
 const uploadForm = ref(null)
 const filteredImage = reactive({
   url: null,
   name: null,
 })
+const errorMessage = ref(null)
 
 async function handleFileSelect(emit) {
   if (emit.error) {
     alert(emit.error)
     selectedImage.value = null
-    selectedImageName = null
+    selectedImageName.value = null
     return
   }
   selectedImage.value = emit.url
@@ -77,10 +78,12 @@ const removeImage = (event) => {
     filteredImage.name = ''
   }
   uploadForm.value.reset()
+  filter.value = null;
 }
 
 const applyFilter = async () => {
   isDisabled.value = true
+  errorMessage.value = null
   if (!selectedImage.value || !filter.value) {
     alert(
       'Error: No image or filter selected. Please upload an image and select a filter before submitting',
@@ -108,7 +111,9 @@ const applyFilter = async () => {
     filteredImage.url = `data:${response.data.mimetype};base64,${base64}`
     filteredImage.name = response.data.name
   } catch (error) {
+    errorMessage.value = error.response.data.message
     console.log('Error uploading Image:', error.message)
+
   } finally {
     loading.value = false
     setTimeout(() => {

@@ -4,7 +4,6 @@ import path from 'path';
 
 
 export default async function removeBackground(imagePath, outputFileName) {
-    console.log('Removing Background Function Called.');
     const apiKey = process.env.API_KEY;
     const url = `https://api.apyhub.com/processor/image/remove-background/file?output=${outputFileName}`
 

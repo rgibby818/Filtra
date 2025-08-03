@@ -71,10 +71,14 @@ export default async function applyImageFilter(filePath, filterOption) {
       break
 
     case 'removebg':
+      try {
       const imageBufferArray = await removeBackground(filePath, filterPathObj.fileName);
       const imageBuffer = Buffer.from(imageBufferArray);
       await fs.writeFile(filterPathObj.filePath, imageBuffer);
       return filterPathObj;
+      } catch (error) {
+        throw new Error("Unable at apply removebg filter")
+      }
 
   }
 
