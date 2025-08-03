@@ -20,15 +20,23 @@ router.post('/', async (req, res) => {
     try {
         const originalImages = await getImages(originalImagesPath, start, end);
         const filteredImages = await getImages(filteredImagesPath, start, end);
-        res.status(200).json({
-            originals: originalImages.images,
-            filtered: filteredImages.images,
-            hasMore: filteredImages.hasMore
-        });
+        if (originalImages.images.length == filteredImages.images.length) {
+            res.status(200).json({
+                originals: originalImages.images,
+                filtered: filteredImages.images,
+                hasMore: filteredImages.hasMore
+            });
+        } else {
+            res.status(500).json({
+                error: "There was an issue with your images. Your originals and filtered images do not match. Try refreshing the page."
+            })
+        }
 
     } catch (error) {
         console.log(error);
-        res.status(500).send('Failed to get images');
+        res.status(500).json({
+            error: "There was a issue getting your images"
+    });
     }
 
 });
