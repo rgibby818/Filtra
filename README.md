@@ -31,7 +31,7 @@ You will be prompted to paste your api key inside the script. If you select no a
 echo "API_KEY=YOUR_API_KEY" > .env
 ```
 
-Now you can navigate to [HERE](localhost:3000) to start using this application.
+Now you can navigate to [HERE](http://127.0.0.1:3000/) to start using this application.
 
 > [!TIP]
 > To stop the server in your terminal press Ctrl + c
