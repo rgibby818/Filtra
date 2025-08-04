@@ -33,7 +33,9 @@
       <MyButton button-text="Download" @click="downloadImage" custom-classes="sm:w-full" />
     </ImagePreview>
   </div>
-  <div v-if="errorMessage" class="flex dark:text-white text-xl font-semibold justify-center">{{ errorMessage }}</div>
+  <div v-if="errorMessage" class="flex dark:text-white text-xl font-semibold justify-center">
+    {{ errorMessage }}
+  </div>
 </template>
 
 <script setup>
@@ -78,7 +80,7 @@ const removeImage = (event) => {
     filteredImage.name = ''
   }
   uploadForm.value.reset()
-  filter.value = null;
+  filter.value = null
 }
 
 const applyFilter = async () => {
@@ -113,7 +115,6 @@ const applyFilter = async () => {
   } catch (error) {
     errorMessage.value = error.response.data.message
     console.log('Error uploading Image:', error.message)
-
   } finally {
     loading.value = false
     setTimeout(() => {

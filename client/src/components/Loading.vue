@@ -8,30 +8,28 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps({
   width: {
     type: String,
-    default: "w-40"
+    default: 'w-40',
   },
   height: {
     type: String,
-    default: "h-40"
+    default: 'h-40',
   },
   textSize: {
     type: String,
-    default: "text-xl"
-  }
-
+    default: 'text-xl',
+  },
 })
 
 const computedClasses = computed(() => {
   return ['relative', 'flex', 'items-center', 'justify-center', props.width, props.height]
-});
+})
 
 const textClasses = computed(() => {
   return ['dark:text-white', 'font-semibold', 'animate-pulse', props.textSize]
 })
-
 </script>

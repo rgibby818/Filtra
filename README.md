@@ -1,4 +1,4 @@
-# filtra
+# Filtra
 ![Screenshot of Filtra processing an image](./screenshots/example.png)
 
 A full-stack web application built with Vue.js and Express that allows users to upload and apply filters to images — including background removal using ApyHub.
@@ -50,7 +50,7 @@ Now you can navigate to [HERE](http://127.0.0.1:3000/) to start using this appli
 
 > [!TIP]  
 > To stop the server in your terminal press Ctrl + c  
-> All images will be located in a `uploads/` and `uploads-filtered/` to quickly erase all of them you can run the command `./cleanup.sh`.
+> All images will be located in a `uploads/` and `uploads-filtered/` to quickly erase all of them you can run the command `./scripts/cleanup.sh`.
 
 ## Technologies
 - [**Front-end**](https://vuejs.org/): built with Vue 3 and Vite.

@@ -25,15 +25,15 @@
         </h3>
       </div>
       <div class="flex flex-col md:flex-row md:gap-2 justify-around">
-      <ImagePreview
-        class="lg:mr-2 w-full"
-        :image-url="`data:${item.mimetype};base64,${item.blob}`"
-        alt-text="item.fileName"
-      />
-      <ImagePreview
-        class="lg:ml-2 w-full"
-        :image-url="`data:${images.filtered[index].mimetype};base64,${images.filtered[index].blob}`"
-      />
+        <ImagePreview
+          class="lg:mr-2 w-full"
+          :image-url="`data:${item.mimetype};base64,${item.blob}`"
+          alt-text="item.fileName"
+        />
+        <ImagePreview
+          class="lg:ml-2 w-full"
+          :image-url="`data:${images.filtered[index].mimetype};base64,${images.filtered[index].blob}`"
+        />
       </div>
     </div>
   </div>
@@ -46,8 +46,17 @@
   </div>
   <div class="mb-5">
     <div v-if="hasMore" class="relative flex justify-center w-full">
-    <MyButton :is-disabled="disableLoadMoreButton" :button-text="loadMoreButtonText" @click="getMoreImages(start, end)" />
-    <Loading v-if="loadingAnimationButton" width="w-7 absolute right-10 top-1" height="h-7" text-size="hidden"/>
+      <MyButton
+        :is-disabled="disableLoadMoreButton"
+        :button-text="loadMoreButtonText"
+        @click="getMoreImages(start, end)"
+      />
+      <Loading
+        v-if="loadingAnimationButton"
+        width="w-7 absolute right-10 top-1"
+        height="h-7"
+        text-size="hidden"
+      />
     </div>
   </div>
 </template>
@@ -103,7 +112,7 @@ async function getImages(startIndex, endIndex) {
     if (hasMore.value) {
       start.value = end.value
       end.value = end.value + 10
-    } 
+    }
   }
 }
 
@@ -112,8 +121,8 @@ async function getMoreImages(start, end) {
   loadingAnimationButton.value = true
   await getImages(start, end)
   if (images.hasMore) {
-  disableLoadMoreButton.value = false
-  loadingAnimationButton.value = false
+    disableLoadMoreButton.value = false
+    loadingAnimationButton.value = false
   } else {
     loadMoreButtonText.value = 'No More Images'
     loadingAnimationButton.value = false
