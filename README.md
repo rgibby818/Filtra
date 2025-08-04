@@ -23,7 +23,7 @@ Now that you have nodejs on your machine copy and paste the following code in a 
 ```
 git clone https://github.com/rgibby818/Filtra.git
 cd Filtra/
-chmod +x ./run.sh ./cleanup.sh
+chmod +x ./setup.sh ./cleanup.sh
 ./setup.sh
 ```
 You will be prompted to paste your api key inside the script. If you select no and want to add it later. copy and paste this code below replacing YOUR_API_KEY with your api key.
