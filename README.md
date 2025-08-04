@@ -30,7 +30,7 @@ curl.exe https://webi.ms/node | powershell
 > [!IMPORTANT]
 > If using windows you have to run install commands inside a bash emulator. I would recommend **Git Bash** or **WSL**
 > ```powershell
-> curl.exe https://webi.ms/git | powershell`
+> curl.exe https://webi.ms/git | powershell
 > ```
 
 ### 3. Install repository and setup your environment
@@ -48,10 +48,8 @@ chmod +x ./scripts/setup.sh ./scripts/cleanup.sh
 
 Now you can navigate to [HERE](http://127.0.0.1:3000/) to start using this application.
 
-> [!TIP]
-> To stop the server in your terminal press Ctrl + c
-
->[!TIP]
+> [!TIP]  
+> To stop the server in your terminal press Ctrl + c  
 > All images will be located in a `uploads/` and `uploads-filtered/` to quickly erase all of them you can run the command `./cleanup.sh`.
 
 ## Technologies
