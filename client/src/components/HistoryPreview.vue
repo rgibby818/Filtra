@@ -44,8 +44,8 @@
     <h1 class="text-lg sm:text-2xl w-auto m-2 text-center">No images to show</h1>
     <DogImage />
   </div>
-  <div  class="mb-5">
-    <div class="relative flex justify-center w-full">
+  <div class="mb-5">
+    <div v-if="hasMore" class="relative flex justify-center w-full">
     <MyButton :is-disabled="disableLoadMoreButton" :button-text="loadMoreButtonText" @click="getMoreImages(start, end)" />
     <Loading v-if="loadingAnimationButton" width="w-7 absolute right-10 top-1" height="h-7" text-size="hidden"/>
     </div>
@@ -103,7 +103,7 @@ async function getImages(startIndex, endIndex) {
     if (hasMore.value) {
       start.value = end.value
       end.value = end.value + 10
-    }
+    } 
   }
 }
 

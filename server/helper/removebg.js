@@ -8,6 +8,7 @@ export default async function removeBackground(imagePath, outputFileName) {
     const url = `https://api.apyhub.com/processor/image/remove-background/file?output=${outputFileName}`
 
     if(!apiKey) {
+        
         throw new Error("Missing API_KEY in environment variable");
     }
     

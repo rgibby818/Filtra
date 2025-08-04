@@ -26,14 +26,25 @@ router.post('/', upload.single('image'), async (req, res) => {
   const file = req.file
   const filter = req.body.option
 
+  const deleteFile = (filePath) => {
+    fs.unlink(filePath, (error) => {
+      if (error) {
+        console.error(`Unable to delete ${filePath}`);
+      }
+    })
+  }
+
   try {
     if (file.mimetype.split('/')[0] !== 'image') {
+      deleteFile(file.path);
       return res.status(415).json({ message: 'File is not an Image' })
     }
     if (!file) {
+      deleteFile(file.path);
       return res.status(400).json({ message: 'No image was uploaded' })
     }
     if (!supportedFiles.includes(file.mimetype.toLowerCase())) {
+      deleteFile(file.path)
       return res.status(415).json({ message: 'File is valid format' })
     }
     const filterImage = await applyImageFilter(file.path, filter)
@@ -52,6 +63,9 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     })
   } catch (error) {
+    if (file) {
+      deleteFile(file.path);
+    }
     if (filter === 'removebg') {
       return res
         .status(500)
