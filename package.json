@@ -1,6 +1,6 @@
 {
   "name": "filtra",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "vite build --config vite.config.js",
     "preview": "vite preview --config vite.config.js",
     "format": "prettier --write client/src/",
-    "server": "nodemon server/server.js"
+    "dev-server": "nodemon server/server.js",
+    "server": "node server/server.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
