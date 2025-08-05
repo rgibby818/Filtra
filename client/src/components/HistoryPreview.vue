@@ -2,12 +2,8 @@
   <div v-if="loading" class="flex flex-col items-center justify-center h-dvh w-dvw">
     <Loading />
   </div>
-  <div
-    v-else-if="errorMessage"
-    class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-4"
-  >
-    <h1 class="text-lg sm:text-2xl w-1/2">{{ errorMessage }}</h1>
-    <DogImage />
+  <div v-else-if="errorMessage">
+    <WholePageMessage :message="errorMessage"/>
   </div>
   <div v-else-if="Object.keys(images.filtered).length > 0" class="flex flex-col items-center mt-3">
     <div
@@ -37,12 +33,8 @@
       </div>
     </div>
   </div>
-  <div
-    v-else
-    class="dark:text-white flex flex-col xl:flex-row items-center justify-center h-dvh w-dvw gap-1"
-  >
-    <h1 class="text-lg sm:text-2xl w-auto m-2 text-center">No images to show</h1>
-    <DogImage />
+  <div v-else>
+    <WholePageMessage message="Your history is empty" />
   </div>
   <div class="mb-5">
     <div v-if="hasMore" class="relative flex justify-center w-full">
@@ -66,6 +58,7 @@ import { ref, reactive, onMounted } from 'vue'
 import axios from 'axios'
 import ImagePreview from './ImagePreview.vue'
 import DogImage from './DogImage.vue'
+import WholePageMessage from './WholePageMessage.vue'
 import Loading from './Loading.vue'
 import MyButton from './MyButton.vue'
 
