@@ -7,7 +7,7 @@
     "dev": "vite --config vite.config.js",
     "build": "vite build --config vite.config.js",
     "preview": "vite preview --config vite.config.js",
-    "format": "prettier --write client/src/",
+    "format": "prettier --write client/src/ server/",
     "dev-server": "nodemon server/server.js",
     "server": "node server/server.js"
   },

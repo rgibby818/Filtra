@@ -4,7 +4,6 @@ import fs from 'fs/promises'
 import removeBackground from './removebg.js'
 import { fileURLToPath } from 'url'
 
-
 function validateOptions(option) {
   const validOption = ['blackwhite', 'sepia', 'invert', 'normalize', 'removebg']
   if (!validOption.includes(option)) {
@@ -13,33 +12,31 @@ function validateOptions(option) {
   return option
 }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 async function createFilePaths(originalFilePath, filterOption) {
   try {
-
-    const sourceImagePath = path.resolve(__dirname, originalFilePath);
-    const destinationPathDir = path.resolve(__dirname, '../../uploads-filtered');
+    const sourceImagePath = path.resolve(__dirname, originalFilePath)
+    const destinationPathDir = path.resolve(__dirname, '../../uploads-filtered')
 
     // Create the filtered-images directory if it doesn't exist
-    await fs.mkdir(destinationPathDir, { recursive: true });
+    await fs.mkdir(destinationPathDir, { recursive: true })
 
     // Build file names
-    const originalFileName = path.basename(sourceImagePath);
-    const fileExtension = path.extname(sourceImagePath);
-    const fileNameOnly = path.basename(originalFileName, fileExtension);
+    const originalFileName = path.basename(sourceImagePath)
+    const fileExtension = path.extname(sourceImagePath)
+    const fileNameOnly = path.basename(originalFileName, fileExtension)
 
-    const filteredImageFileName = `${fileNameOnly}-${filterOption}${fileExtension}`;
-    const filteredImageFilePath = path.join(destinationPathDir, filteredImageFileName);
+    const filteredImageFileName = `${fileNameOnly}-${filterOption}${fileExtension}`
+    const filteredImageFilePath = path.join(destinationPathDir, filteredImageFileName)
 
     return {
       fileName: filteredImageFileName,
-      filePath: filteredImageFilePath
-    };
-
+      filePath: filteredImageFilePath,
+    }
   } catch (error) {
-    console.error('Unable to create file path:', error);
-    throw new Error(`Error in createFilePaths: ${error.message}`);
+    console.error('Unable to create file path:', error)
+    throw new Error(`Error in createFilePaths: ${error.message}`)
   }
 }
 
@@ -72,17 +69,16 @@ export default async function applyImageFilter(filePath, filterOption) {
 
     case 'removebg':
       try {
-      const imageBufferArray = await removeBackground(filePath, filterPathObj.fileName);
-      const imageBuffer = Buffer.from(imageBufferArray);
-      await fs.writeFile(filterPathObj.filePath, imageBuffer);
-      return filterPathObj;
+        const imageBufferArray = await removeBackground(filePath, filterPathObj.fileName)
+        const imageBuffer = Buffer.from(imageBufferArray)
+        await fs.writeFile(filterPathObj.filePath, imageBuffer)
+        return filterPathObj
       } catch (error) {
-        throw new Error("Unable at apply removebg filter")
+        throw new Error('Unable at apply removebg filter')
       }
-
   }
 
-  await img.toFile(filterPathObj.filePath);
+  await img.toFile(filterPathObj.filePath)
 
-  return filterPathObj;
+  return filterPathObj
 }

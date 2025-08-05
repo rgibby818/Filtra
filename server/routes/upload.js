@@ -29,18 +29,18 @@ router.post('/', upload.single('image'), async (req, res) => {
   const deleteFile = (filePath) => {
     fs.unlink(filePath, (error) => {
       if (error) {
-        console.error(`Unable to delete ${filePath}`);
+        console.error(`Unable to delete ${filePath}`)
       }
     })
   }
 
   try {
     if (file.mimetype.split('/')[0] !== 'image') {
-      deleteFile(file.path);
+      deleteFile(file.path)
       return res.status(415).json({ message: 'File is not an Image' })
     }
     if (!file) {
-      deleteFile(file.path);
+      deleteFile(file.path)
       return res.status(400).json({ message: 'No image was uploaded' })
     }
     if (!supportedFiles.includes(file.mimetype.toLowerCase())) {
@@ -64,14 +64,12 @@ router.post('/', upload.single('image'), async (req, res) => {
     })
   } catch (error) {
     if (file) {
-      deleteFile(file.path);
+      deleteFile(file.path)
     }
     if (filter === 'removebg') {
-      return res
-        .status(500)
-        .json({
-          message: 'Error on removing background. Is your apyhub.com api key in a .env file?',
-        })
+      return res.status(500).json({
+        message: 'Error on removing background. Is your apyhub.com api key in a .env file?',
+      })
     } else {
       return res.status(500).json({ message: `Error on processing image: ${error}` })
     }
