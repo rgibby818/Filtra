@@ -1,6 +1,5 @@
 import 'dotenv/config'
 import fetch, { FormData, fileFromSync } from 'node-fetch'
-import path from 'path'
 
 export default async function removeBackground(imagePath, outputFileName) {
   const apiKey = process.env.API_KEY

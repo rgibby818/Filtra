@@ -10,7 +10,7 @@
 <script setup>
 import DogImage from './DogImage.vue'
 
-const props = defineProps({
+defineProps({
   message: {
     type: String,
     required: true,

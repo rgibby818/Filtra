@@ -22,7 +22,7 @@
 import { defineProps } from 'vue'
 import UploadArea from './UploadArea.vue'
 
-const props = defineProps({
+defineProps({
   imageUrl: {
     type: String,
     default: '',

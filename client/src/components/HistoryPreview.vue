@@ -62,10 +62,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from 'vue'
 import ImagePreview from './ImagePreview.vue'
-import DogImage from './DogImage.vue'
 import WholePageMessage from './WholePageMessage.vue'
 import Loading from './Loading.vue'
 import MyButton from './MyButton.vue'
@@ -121,7 +119,7 @@ async function getMoreImages(start, end) {
   disableLoadMoreButton.value = true
   loadingAnimationButton.value = true
   await getImages(start, end)
-  if (images.hasMore) {
+  if (images.value.hasMore) {
     disableLoadMoreButton.value = false
     loadingAnimationButton.value = false
   } else {

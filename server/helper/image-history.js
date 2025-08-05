@@ -1,5 +1,5 @@
 import fs from 'fs/promises'
-import path, { basename } from 'path'
+import path from 'path'
 
 function getMimeType(basename) {
   return `image/${basename.split('.')[1]}`

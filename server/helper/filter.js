@@ -74,7 +74,8 @@ export default async function applyImageFilter(filePath, filterOption) {
         await fs.writeFile(filterPathObj.filePath, imageBuffer)
         return filterPathObj
       } catch (error) {
-        throw new Error('Unable at apply removebg filter')
+        console.log(error)
+        throw new Error(`Unable at apply removebg filter:`)
       }
   }
 

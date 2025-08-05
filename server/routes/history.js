@@ -1,8 +1,6 @@
 import express from 'express'
-import fs from 'fs'
 import path from 'path'
 import getImages from '../helper/image-history.js'
-import e from 'express'
 
 const router = express.Router()
 const originalImagesPath = path.resolve('uploads/')

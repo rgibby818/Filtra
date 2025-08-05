@@ -13,7 +13,6 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    const ext = file.originalname.split('.').pop()
     const filename = `${Date.now()}-${file.originalname}`
     cb(null, filename)
   },
@@ -48,7 +47,6 @@ router.post('/', upload.single('image'), async (req, res) => {
       return res.status(415).json({ message: 'File is valid format' })
     }
     const filterImage = await applyImageFilter(file.path, filter)
-    const mimetype = file.mimetype
 
     fs.readFile(filterImage.filePath, (error, data) => {
       if (error) {

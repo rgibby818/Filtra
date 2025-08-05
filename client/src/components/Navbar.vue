@@ -1,13 +1,12 @@
 <script setup>
 import Logo from '@/components/Logo.vue'
-import { computed } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink } from 'vue-router'
 
-const props = defineProps({
-  to: {
-    type: [String, Object],
-  },
-})
+// const props = defineProps({
+//   to: {
+//     type: [String, Object],
+//   },
+// })
 </script>
 
 <template>

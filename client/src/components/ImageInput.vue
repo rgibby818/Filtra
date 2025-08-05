@@ -72,7 +72,7 @@ async function handleFileSelect(emit) {
   return
 }
 
-const removeImage = (event) => {
+const removeImage = () => {
   localStorage.clear()
   selectedImage.value = null
   if (filteredImage) {
