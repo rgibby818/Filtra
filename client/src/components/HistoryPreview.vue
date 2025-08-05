@@ -3,7 +3,7 @@
     <Loading />
   </div>
   <div v-else-if="errorMessage">
-    <WholePageMessage :message="errorMessage"/>
+    <WholePageMessage :message="errorMessage" />
   </div>
   <div v-else-if="Object.keys(images.filtered).length > 0" class="flex flex-col items-center mt-3">
     <div
@@ -30,7 +30,13 @@
         <ImagePreview
           class="lg:ml-2 w-full hover:scale-102"
           :image-url="`data:${images.filtered[index].mimetype};base64,${images.filtered[index].blob}`"
-          @click="downloadImage(images.filtered[index].fileName, images.filtered[index].blob, images.filtered[index].mimetype)"
+          @click="
+            downloadImage(
+              images.filtered[index].fileName,
+              images.filtered[index].blob,
+              images.filtered[index].mimetype,
+            )
+          "
         />
       </div>
     </div>
@@ -125,8 +131,8 @@ async function getMoreImages(start, end) {
 }
 
 function downloadImage(fileName, blob, mimetype) {
-  if(!fileName || !blob || !mimetype) {
-    console.error("Unable to download image!")
+  if (!fileName || !blob || !mimetype) {
+    console.error('Unable to download image!')
     return
   }
   const url = URL.createObjectURL(new Blob([blob], { type: mimetype }))
@@ -136,8 +142,6 @@ function downloadImage(fileName, blob, mimetype) {
   a.download = fileName
   a.click()
   URL.revokeObjectURL(url)
-
-
 }
 
 function convertEpochTime(epoch) {
