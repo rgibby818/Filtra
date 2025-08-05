@@ -9,9 +9,9 @@
     <div
       v-for="(item, index) in images.originals"
       :key="index"
-      class="grid grid-cols-1 gap-1 w-4/6"
+      class="grid grid-cols-1 gap-0 w-4/6"
     >
-      <div class="flex flex-col sm:flex-row justify-between">
+      <div class="flex flex-col sm:flex-row justify-around">
         <time class="text-center dark:text-white font-mono text-xs sm:text-base">{{
           convertEpochTime(item.fileName.split('-')[0])
         }}</time>
@@ -22,13 +22,15 @@
       </div>
       <div class="flex flex-col md:flex-row md:gap-2 justify-around">
         <ImagePreview
-          class="lg:mr-2 w-full"
+          class="lg:mr-2 w-full hover:scale-102"
           :image-url="`data:${item.mimetype};base64,${item.blob}`"
           alt-text="item.fileName"
+          @click="downloadImage(item.fileName, item.blob, item.mimetype)"
         />
         <ImagePreview
-          class="lg:ml-2 w-full"
+          class="lg:ml-2 w-full hover:scale-102"
           :image-url="`data:${images.filtered[index].mimetype};base64,${images.filtered[index].blob}`"
+          @click="downloadImage(images.filtered[index].fileName, images.filtered[index].blob, images.filtered[index].mimetype)"
         />
       </div>
     </div>
@@ -120,6 +122,22 @@ async function getMoreImages(start, end) {
     loadMoreButtonText.value = 'No More Images'
     loadingAnimationButton.value = false
   }
+}
+
+function downloadImage(fileName, blob, mimetype) {
+  if(!fileName || !blob || !mimetype) {
+    console.error("Unable to download image!")
+    return
+  }
+  const url = URL.createObjectURL(new Blob([blob], { type: mimetype }))
+
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  a.click()
+  URL.revokeObjectURL(url)
+
+
 }
 
 function convertEpochTime(epoch) {
