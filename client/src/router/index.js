@@ -13,6 +13,10 @@ const routes = [
     name: 'History',
     component: History,
   },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
+  },
 ]
 
 const router = createRouter({

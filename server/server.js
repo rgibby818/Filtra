@@ -18,7 +18,7 @@ app.use('/history', history)
 
 app.use(express.static(vueDistPath))
 
-app.get('/', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(vueDistPath, 'index.html'))
 })
 
