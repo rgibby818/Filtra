@@ -13,7 +13,7 @@ export default async function getImages(directoryPath, start, end) {
   }
 
   try {
-    const files = await fs.readdir(directoryPath)
+    const files = (await fs.readdir(directoryPath)).reverse()
     const filesInRange = files.slice(start, end)
     const hasMore = files.length > end
 
