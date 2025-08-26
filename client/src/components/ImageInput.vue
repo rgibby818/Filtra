@@ -113,8 +113,14 @@ const applyFilter = async () => {
     filteredImage.url = `data:${response.data.mimetype};base64,${base64}`
     filteredImage.name = response.data.name
   } catch (error) {
-    errorMessage.value = error.response.data.message
-    console.log('Error uploading Image:', error.message)
+    if(error.message === "Network Error") {
+      errorMessage.value = "No internet. Please reconnect and try again"
+    } else {
+      console.error("Error Processing Image")
+      console.log(error)
+      errorMessage.value = error.response.data.message
+      console.log('Error uploading Image:', error.message)
+    }
   } finally {
     loading.value = false
     setTimeout(() => {
