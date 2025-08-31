@@ -110,7 +110,7 @@ async function getImages(startIndex, endIndex) {
     loading.value = false
     if (hasMore.value) {
       start.value = end.value
-      end.value = end.value + 10
+      end.value = end.value + 5
     }
   }
 }

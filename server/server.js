@@ -4,6 +4,7 @@ import upload from './routes/upload.js'
 import history from './routes/history.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import fs from 'fs/promises'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -11,6 +12,19 @@ const PORT = process.env.PORT || 3000
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const vueDistPath = path.resolve(__dirname, '../client/dist')
+
+const dirsToCreate = ['uploads', 'uploads-filtered'].map(dir =>
+  path.resolve(dir)
+)
+
+for (const dir of dirsToCreate) {
+  try {
+    await fs.mkdir(dir, { recursive: true })
+    console.log(`Ensured directory exists: ${dir}`)
+  } catch (err) {
+    console.error(`Error creating directory ${dir}:`, err)
+  }
+}
 
 app.use(cors())
 app.use('/upload', upload)
